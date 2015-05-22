@@ -1,0 +1,4 @@
+node_modules/
+app-min.js
+app-min.js.map
+sftp-config.json

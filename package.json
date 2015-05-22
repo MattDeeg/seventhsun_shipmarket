@@ -1,0 +1,21 @@
+{
+  "name": "ShipMarket",
+  "version": "0.0.1",
+  "description": "Ship market for 7th Sun",
+  "main": "app.js",
+  "dependencies": {
+    "brfs": "^1.4.0",
+    "json-loader": "^0.5.1",
+    "lodash": "^3.9.1",
+    "pathfinding": "^0.4.17",
+    "pixi.js": "^3.0.6",
+    "transform-loader": "^0.2.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build": "webpack  ./app ./app-min.js -d",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matt DeGennaro <mattdeeg@gmail.com> (https://github.com/MattDeeg)",
+  "license": "ISC"
+}
