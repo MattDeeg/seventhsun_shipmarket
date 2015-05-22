@@ -11,6 +11,7 @@ var path = finder.findPath(1, 2, 4, 2, grid);
 /////////////////////////////////////////////////////////////////////
 
 window.onload = function() {
+  var eventBus = require('./utils/event_bus');
   var PIXI = require('pixi.js');
   window.PIXI = PIXI;
   var requestAnimFrame = (function() {
@@ -31,8 +32,8 @@ window.onload = function() {
 
   var config = require('./config');
   var bounds = config.bounds;
-  var startX = (bounds.x[1] + winSize.width) / 2;
-  var startY = (bounds.y[1] + winSize.height) / 2;
+  var startX = bounds.x[1] / -2;
+  var startY = bounds.y[1] / -2;
 
   // create a renderer instance
   // var renderer = new PIXI.CanvasRenderer(winSize.width, winSize.height);
@@ -59,10 +60,11 @@ window.onload = function() {
 
   var dragZoom = require('./utils/drag_zoom');
   var gridPos = dragZoom(document, startX, startY, 1, bounds);
+  window.gridPos = gridPos;
 
   var setPositions = function() {
-    stageContainer.position.x = gridPos.x - gridPos.bounds.x[1];
-    stageContainer.position.y = gridPos.y - gridPos.bounds.y[1];
+    stageContainer.position.x = gridPos.x;
+    stageContainer.position.y = gridPos.y;
     stageContainer.scale.x = gridPos.zoom;
     stageContainer.scale.y = gridPos.zoom;
 
@@ -71,19 +73,12 @@ window.onload = function() {
     tilingSprite.tileScale.x = gridPos.zoom * 0.4;
     tilingSprite.tileScale.y = gridPos.zoom * 0.4;
   };
-  gridPos.addEventListener('update', setPositions);
+  eventBus.on('update', setPositions);
   setPositions();
 
   var world = require('./world');
   stageContainer.addChild(graphics);
   stageContainer.addChild(world.setup());
-
-  var TextPanel = require('./classes/text_panel');
-  var panel = new TextPanel('Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, odit saepe ipsam corrupti delectus autem labore dolorum ratione sit rem libero pariatur tenetur consequatur ipsa inventore? Corrupti quod reiciendis sapiente!', 200, 200, 20);
-  panel.position.x = 200;
-  panel.position.y = 200;
-  stage.addChild(panel);
-
 
   function animate() {
     for (var i = stage.children.length; i--;) {

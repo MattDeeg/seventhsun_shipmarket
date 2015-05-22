@@ -57,22 +57,27 @@ DragZoom.prototype.dragEnd = function() {
 
 DragZoom.prototype.wheel = function(e) {
   this.zoom += 0.1 * (e.wheelDelta > 0 ? 1 : -1);
-  this.zoom = Math.min(2, Math.max(0.5, this.zoom));
+  this.zoom = Math.min(1.5, Math.max(0.5, this.zoom));
   this.doBounds();
 };
 
+var eventBus = require('./event_bus');
 DragZoom.prototype.doBounds = function() {
   var bX = this.bounds.x;
   var bY = this.bounds.y;
   var fuzz = 50;
   var z = this.zoom;
-  this.x = Math.min(bX[1] + fuzz * z, Math.max((bX[0] - fuzz) * z + winSize.width, this.x));
-  this.y = Math.min(bY[1] + fuzz * z, Math.max((bY[0] - fuzz) * z + winSize.height, this.y));
 
-  var event = document.createEvent('HTMLEvents');
-  event.initEvent('update', true, false);
-  event.data = this;
-  this.elem.dispatchEvent(event);
+  var minX = (-bX[1] - fuzz) * z + winSize.width;
+  var maxX = (bX[0] + fuzz) * z;
+
+  var minY = (-bY[1] - fuzz) * z + winSize.height;
+  var maxY = (bY[0] + fuzz) * z;
+
+  this.x = Math.min(maxX, Math.max(minX, this.x));
+  this.y = Math.min(maxY, Math.max(minY, this.y));
+
+  eventBus.emit('update', this);
 };
 
 DragZoom.prototype.addEventListener = function(type, handler) {
